@@ -23,6 +23,7 @@ public class MailFile {
 
 	private final String mailAdressReceiver;
 	private final String filePath;
+	private final String fileName;
 
 	private static String ABSENDER_MAILADRESSE = "mail.mailadresse";
 	private static String ABSENDER_BENUTZERNAME = "mail.benutzername";
@@ -50,6 +51,8 @@ public class MailFile {
 		this.myFileWriter = new MyFileWriter(outputLogfileName, outputLogfilePath);
 		this.mailAdressReceiver = mailAdressReceiver;
 		this.filePath = filePath;
+		String[] teile = filePath.split("/");
+		this.fileName = teile[teile.length-1];
 		Properties prop = new Properties();
 		try {
 			prop.load(getClass().getClassLoader().getResourceAsStream("mail.properties"));
@@ -108,9 +111,9 @@ public class MailFile {
 			sendToServer("DATA");
 			receiveFromServer();
 			
-			sendToServer("From: Deine Mudder");
-			sendToServer("To: Bastard");
-			sendToServer("Subject: Du riechst");
+			sendToServer("From: Lutz");
+			sendToServer("To: "+ mailadresse);
+			sendToServer("Subject: Guten Tag");
 			sendToServer("MIME-Version: 1.0");
 			sendToServer("Content-Type: multipart/mixed; boundary=8484636278363");
 			sendToServer("");
@@ -124,10 +127,10 @@ public class MailFile {
 			sendToServer("--8484636278363");
 			sendToServer("Content-Transfer-Encoding: base64");
 			sendToServer("Content-Type: image/jpg");
-			sendToServer("Content-Disposition: attachment; filename=putty.jpg");
+			sendToServer("Content-Disposition: attachment; filename="+fileName);
 			sendToServer("");
 			
-			byte[] byteFile = Files.readAllBytes(Paths.get("files/putty.jpg"));
+			byte[] byteFile = Files.readAllBytes(Paths.get(filePath));
 			String encodedString = Base64.encodeBytes(byteFile);
 			sendToServer(encodedString);
 			sendToServer("--8484636278363--");
@@ -182,8 +185,8 @@ public class MailFile {
 	 */
 	public static void main(String[] args) {
 		try {
-			new MailFile("robert.scheffel@haw-hamburg.de", "/RN_Praktikum/files/TestFile.txt");
-			// new MailFile(args[0], args[1]);
+//			new MailFile("robert.scheffel@haw-hamburg.de", "/RN_Praktikum/files/TestFile.txt");
+			 new MailFile(args[0], args[1]);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
