@@ -3,6 +3,8 @@
  */
 package eu.rn.praktikum2;
 
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -15,6 +17,8 @@ public class ChatServer {
 	
 	private Semaphore semaphore;
 	
+	private MyFileWriter writer;
+	
 	/**
 	 * @param port
 	 * @param thread
@@ -26,8 +30,31 @@ public class ChatServer {
 	}
 
 	private void startServer() {
-		// TODO Auto-generated method stub
+		ServerSocket mainSocketServer; // Socket was auf Anfragen wartet und arbeitsthreads erzeugt
+		Socket arbeitsSocketConn; // Verbindungssocket für den Arbeitsthread
 		
+		int indexThread = 0;
+		try{
+			writer = new MyFileWriter("ChatLogFile.txt", "files/");
+			mainSocketServer = new ServerSocket(serverPort);
+			
+			
+			while(true){
+				semaphore.acquire();
+				System.out.println("Server waiting for Connection");
+				arbeitsSocketConn = mainSocketServer.accept();
+				indexThread++;
+				new ArbeitsSocket(indexThread,arbeitsSocketConn,this).start();
+				
+			}
+		}catch(Exception e){
+			
+		}
+		
+	}
+	
+	public Semaphore getSemaphore(){
+		return semaphore;
 	}
 
 	/**
