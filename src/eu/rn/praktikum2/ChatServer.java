@@ -44,8 +44,7 @@ public class ChatServer {
 				System.out.println("Server waiting for Connection");
 				arbeitsSocketConn = mainSocketServer.accept();
 				indexThread++;
-				new ArbeitsSocket(indexThread,arbeitsSocketConn,this).start();
-				
+				new ArbeitsSocket(indexThread,arbeitsSocketConn,this).start();				
 			}
 		}catch(Exception e){
 			
@@ -61,9 +60,7 @@ public class ChatServer {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
-		new ChatServer(45619, 2);
-
+		new ChatServer(45619, 4);
 	}
 
 }

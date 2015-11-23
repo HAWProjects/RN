@@ -28,6 +28,8 @@ public class ArbeitsSocket extends Thread {
 	
 	public void run() {
 		String currentInput;
+		 System.out.println("TCP Worker Thread " + threadNumber +
+		            " is running until QUIT is received!");
 		try {
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			output = new DataOutputStream(socket.getOutputStream());
@@ -41,16 +43,21 @@ public class ArbeitsSocket extends Thread {
 				if(currentInput.startsWith("QUIT")){
 					working = false;
 				}
+				
 			}
 			
 		} catch(Exception e) {
+		
 		} finally {
+			System.out.println("TCP Worker Thread " + threadNumber + " stopped!");
 			server.getSemaphore().release();
 		}
 	}
 	
 	private String readFromClient() throws IOException{
-		return input.readLine();
+		String inFromClient = input.readLine();
+		System.out.println("TCP Worker Thread " + threadNumber + " detected job: " + inFromClient);
+		return inFromClient;
 	}
 	
 	private void writeToClient(String value) throws IOException{

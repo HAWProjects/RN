@@ -58,7 +58,7 @@ public class ChatClient {
 			socket = new Socket(localHost, serverPort);
 			outToServer = new DataOutputStream(socket.getOutputStream());
 			inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			connected = true;
+			connected = false;
 			myWriter = new MyFileWriter("ChatLogFile.txt", "files/");
 			
 			sc = new Scanner(System.in);
@@ -66,6 +66,10 @@ public class ChatClient {
 			writeToServer("HELO");
 			if(readFromServer().equals("HELO")){
 				writeToServer("USER " +userName);
+			}
+			
+			if(readFromServer().equals("ACCEPT")){
+				connected = true;
 			}
 			
 			while(connected){
@@ -90,8 +94,7 @@ public class ChatClient {
 	 * @throws IOException
 	 */
 	private String readFromServer() throws IOException {
-		String result = "";
-		result = inFromServer.readLine();
+		String result = inFromServer.readLine();
 		myWriter.writeLine("Server: " + result);
 		return result;
 	}
@@ -109,7 +112,7 @@ public class ChatClient {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new ChatClient("localhost",45619,"UserName");
+		new ChatClient("localhost",45619,"Hans");
 
 	}
 
