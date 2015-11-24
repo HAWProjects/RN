@@ -21,7 +21,7 @@ public class ChatClient {
 	private String userName;
 	private Socket socket;
 	private boolean connected;
-	private MyFileWriter myWriter;
+//	private MyFileWriter myWriter;
 	
 	
 	
@@ -36,9 +36,8 @@ public class ChatClient {
 	 * @param serverPort
 	 * @param userName
 	 */
-	public ChatClient(String localHost,int serverPort, String userName) {
+	public ChatClient(String localHost,int serverPort) {
 		this.localHost = localHost;
-		this.userName = userName;
 		this.serverPort = serverPort;
 		connected = false;
 		
@@ -59,16 +58,15 @@ public class ChatClient {
 			outToServer = new DataOutputStream(socket.getOutputStream());
 			inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			connected = false;
-			myWriter = new MyFileWriter("ChatLogFile.txt", "files/");
+//			myWriter = new MyFileWriter("ChatLogFile.txt", "files/");
 			
 			sc = new Scanner(System.in);
+			System.out.println("Bitte Nutzernamen eingeben:");
+			userName = sc.nextLine();
 			
 			writeToServer("HELO");
 			if(readFromServer().equals("HELO")){
 				writeToServer("USER " +userName);
-			}
-			
-			if(readFromServer().equals("ACCEPT")){
 				connected = true;
 			}
 			
@@ -95,7 +93,7 @@ public class ChatClient {
 	 */
 	private String readFromServer() throws IOException {
 		String result = inFromServer.readLine();
-		myWriter.writeLine("Server: " + result);
+//		myWriter.writeLine("Server: " + result);
 		return result;
 	}
 
@@ -105,14 +103,14 @@ public class ChatClient {
 	 */
 	private void writeToServer(String input) throws IOException {
 		outToServer.writeBytes(input + "\r\n");
-		myWriter.writeLine("Client: " + input);
+//		myWriter.writeLine("Client: " + input);
 	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new ChatClient("localhost",45619,"Hans");
+		new ChatClient("localhost",45619);
 
 	}
 
