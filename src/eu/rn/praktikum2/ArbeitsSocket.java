@@ -51,6 +51,7 @@ public class ArbeitsSocket extends Thread
 
                 if (currentInput.toUpperCase().startsWith("QUIT"))
                 {
+                    writeToClient("Verbindung beendet");
                     working = false;
                 }
 
@@ -75,7 +76,7 @@ public class ArbeitsSocket extends Thread
         return inFromClient;
     }
 
-    private void writeToClient(String value) throws IOException
+    public void writeToClient(String value) throws IOException
     {
         output.writeBytes(value + "\r\n");
 

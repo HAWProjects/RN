@@ -110,7 +110,8 @@ public class ChatClient {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new ChatClient("localhost",45619);
+//		new ChatClient("localhost",45619);
+		new ChatClient("192.168.178.23",45619);
 
 	}
 

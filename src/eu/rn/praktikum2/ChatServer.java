@@ -3,8 +3,11 @@
  */
 package eu.rn.praktikum2;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -19,6 +22,8 @@ public class ChatServer {
 	
 	private MyFileWriter writer;
 	
+	private Set<ArbeitsSocket> sockets;
+	
 	/**
 	 * @param port
 	 * @param thread
@@ -26,6 +31,7 @@ public class ChatServer {
 	public ChatServer(int port, int threadCount) {
 		serverPort = port;
 		semaphore = new Semaphore(threadCount);
+		sockets = new HashSet<ArbeitsSocket>();
 		startServer();
 	}
 
@@ -44,12 +50,30 @@ public class ChatServer {
 				System.out.println("Server waiting for Connection");
 				arbeitsSocketConn = mainSocketServer.accept();
 				indexThread++;
-				new ArbeitsSocket(indexThread,arbeitsSocketConn,this).start();				
+				ArbeitsSocket neuesSocket = new ArbeitsSocket(indexThread,arbeitsSocketConn,this);
+				sockets.add(neuesSocket);
+				neuesSocket.start();
 			}
 		}catch(Exception e){
 			
 		}
 		
+	}
+	
+	public void writeToSockets(String text)
+	{
+	    for(ArbeitsSocket s : sockets)
+	    {
+	        try
+            {
+                s.writeToClient(text);
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+	    }
 	}
 	
 	public Semaphore getSemaphore(){
