@@ -47,7 +47,8 @@ public class ArbeitsSocket extends Thread
             {
                 currentInput = readFromClient();
 
-                writeToClient(currentInput);
+//                writeToClient(currentInput);
+                server.writeToSockets(username + ": " + currentInput);
 
                 if (currentInput.toUpperCase().startsWith("QUIT"))
                 {
