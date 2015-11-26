@@ -11,6 +11,8 @@ import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 /**
+ * Modelliert einen Server, zu dem sich mehrere Clients verbinden können um miteinander zu kommunizieren.
+ * 
  * @author abt434
  *
  */
@@ -22,19 +24,25 @@ public class ChatServer {
 	
 	private MyFileWriter writer;
 	
-	private Set<ArbeitsSocket> sockets;
+	private Verbindungen verbindungen;
+	
+	private Userliste users;
 	
 	/**
-	 * @param port
-	 * @param thread
+	 * @param port Port auf dem der Server Anfragen annehmen soll
+	 * @param maxClientAnzahl Anzahl der Clients, die sich verbinden können
 	 */
-	public ChatServer(int port, int threadCount) {
+	public ChatServer(int port, int maxClientAnzahl) {
 		serverPort = port;
-		semaphore = new Semaphore(threadCount);
-		sockets = new HashSet<ArbeitsSocket>();
+		semaphore = new Semaphore(maxClientAnzahl);
+		verbindungen = new Verbindungen();
+		users = new Userliste();
 		startServer();
 	}
 
+	/**
+	 * Startet den Chat-Server
+	 */
 	private void startServer() {
 		ServerSocket mainSocketServer; // Socket was auf Anfragen wartet und arbeitsthreads erzeugt
 		Socket arbeitsSocketConn; // Verbindungssocket für den Arbeitsthread
@@ -50,8 +58,8 @@ public class ChatServer {
 				System.out.println("Server waiting for Connection");
 				arbeitsSocketConn = mainSocketServer.accept();
 				indexThread++;
-				ArbeitsSocket neuesSocket = new ArbeitsSocket(indexThread,arbeitsSocketConn,this);
-				sockets.add(neuesSocket);
+				Verbindung neuesSocket = new Verbindung(indexThread,arbeitsSocketConn,this);
+				verbindungen.fuegeHinzu(neuesSocket);
 				neuesSocket.start();
 			}
 		}catch(Exception e){
@@ -60,9 +68,13 @@ public class ChatServer {
 		
 	}
 	
-	public void writeToSockets(String text)
+	/**
+	 * Sendet Text an alle verbundenen Clients
+	 * @param text der zu sendende Text
+	 */
+	public synchronized void writeToSockets(String text)
 	{
-	    for(ArbeitsSocket s : sockets)
+	    for(Verbindung s : verbindungen.getVerbindungen())
 	    {
 	        try
             {
@@ -80,11 +92,14 @@ public class ChatServer {
 		return semaphore;
 	}
 
-	/**
-	 * @param args
-	 */
+	
 	public static void main(String[] args) {
 		new ChatServer(45619, 4);
+	}
+	
+	public String getUsernames()
+	{
+		return users.getNames();
 	}
 
 }
