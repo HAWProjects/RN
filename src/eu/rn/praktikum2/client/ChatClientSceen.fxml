@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.rn.praktikum2.client.ChatClientController">
+   <left>
+      <Pane fx:id="paneLogin" prefHeight="300.0" prefWidth="166.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="lbUser" layoutX="45.0" layoutY="21.0" text="Benutzername" />
+            <TextField fx:id="txtUser" layoutX="13.0" layoutY="46.0" />
+            <Label fx:id="lbServerIp" layoutX="61.0" layoutY="100.0" text="Server-IP" />
+            <TextField fx:id="txtServerIP" layoutX="10.0" layoutY="117.0" />
+            <Label fx:id="lbServerePort" layoutX="54.0" layoutY="180.0" text="Server-Port" />
+            <TextField fx:id="txtServerPort" layoutX="10.0" layoutY="200.0" />
+            <Button fx:id="btnConnect" layoutX="49.0" layoutY="248.0" mnemonicParsing="false" onAction="#btnConnectPressed" text="Verbinden" />
+         </children>
+      </Pane>
+   </left>
+   <center>
+      <Pane fx:id="paneContent" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextArea fx:id="txtAInput" layoutX="6.0" layoutY="208.0" onKeyReleased="#onKeyPressed" prefHeight="89.0" prefWidth="322.0" />
+            <ScrollPane fx:id="scPaneOutput" layoutX="6.0" layoutY="2.0" prefHeight="203.0" prefWidth="322.0">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+              </content>
+            </ScrollPane>
+         </children>
+      </Pane>
+   </center>
+</BorderPane>

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.rn.praktikum2;
+package eu.rn.praktikum2.client;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -35,7 +35,7 @@ public class ChatClient {
 	 * @param serverPort
 	 *            Port auf dem der Server Anfragen annimmt
 	 */
-	public ChatClient(String hostname, int serverPort) {
+	public ChatClient(String hostname, int serverPort, String username) {
 		this.hostname = hostname;
 		this.serverPort = serverPort;
 		connected = false;
@@ -138,7 +138,7 @@ public class ChatClient {
 	public static void main(String[] args) {
 		// new ChatClient("localhost",45619);
 		// new ChatClient("192.168.178.23", 45619);
-		new ChatClient("141.22.27.100", 45619);
+		new ChatClient("141.22.27.100", 45619,"");
 
 	}
 	
