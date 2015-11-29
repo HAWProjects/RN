@@ -10,6 +10,11 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Scanner;
 
+import javafx.event.EventHandler;
+import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+
 /**
  * Modelliert einen Chat-Client mit dem der Benutzer sich mit einem Chat-Server
  * verbinden kann.
@@ -28,6 +33,8 @@ public class ChatClient {
 
 	private DataOutputStream outToServer;
 	private BufferedReader inFromServer;
+	
+	private ChatClientController controller;
 
 	/**
 	 * @param hostname
@@ -35,10 +42,11 @@ public class ChatClient {
 	 * @param serverPort
 	 *            Port auf dem der Server Anfragen annimmt
 	 */
-	public ChatClient(String hostname, int serverPort, String username) {
+	public ChatClient(String hostname, int serverPort, String username, ChatClientController controller) {
 		this.hostname = hostname;
 		this.serverPort = serverPort;
 		connected = false;
+		this.controller = controller;
 
 		startConnection();
 	}
@@ -51,7 +59,7 @@ public class ChatClient {
 	 */
 	private void startConnection() {
 		Scanner sc;
-		String input;
+		
 		String messageFromServer;
 
 		try {
@@ -73,20 +81,27 @@ public class ChatClient {
 
 			Thread t = new Thread() {
 				public void run() {
-					try {
-						String input;
-						while (true)
-						{
-							input = sc.nextLine();
-							if(input.equals("/users"))
-							{
+					while (true)
+					{
+						
+						controller.getTxtAInput().setOnKeyReleased(new EventHandler<KeyEvent>() {
+							@Override
+							public void handle(KeyEvent event) {
+								if(event.getCode() == KeyCode.ENTER){
+									String input = controller.getTxtAInput().getText();
+//										controller.getvBoxOutput().getChildren().add(label);
+									controller.getTxtAInput().clear();
+									if(input.equals("/users"))
+									{
 
+									}
+									writeToServer(input);
+									System.out.println("Tach");
+								}
+								
 							}
-							writeToServer(input);
-						}
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						});
+
 					}
 				}
 			};
@@ -95,6 +110,9 @@ public class ChatClient {
 			while (connected) {
 
 				messageFromServer = readFromServer();
+				Label label = new Label(messageFromServer);
+				controller.getvBoxOutput().getChildren().add(label);
+				
 				System.out.println(messageFromServer);
 				if (messageFromServer.equals("Verbindung beendet")) {
 					connected = false;
@@ -127,21 +145,16 @@ public class ChatClient {
 	 *            Text, der an den Server gesendet werden soll
 	 * @throws IOException
 	 */
-	private void writeToServer(String input) throws IOException {
-		outToServer.writeBytes(input + "\r\n");
+	private void writeToServer(String input)  {
+		try {
+			outToServer.writeBytes(input + "\r\n");
+		} catch(IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// myWriter.writeLine("Client: " + input);
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// new ChatClient("localhost",45619);
-		// new ChatClient("192.168.178.23", 45619);
-		new ChatClient("141.22.27.100", 45619,"");
-
-	}
-	
 	public String getUsername()
 	{
 		return userName;

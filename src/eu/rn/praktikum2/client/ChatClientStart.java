@@ -1,5 +1,7 @@
 package eu.rn.praktikum2.client;
 
+
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,6 +21,11 @@ public class ChatClientStart extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("ChatClient - User: ");
 			ChatClientController controller = (ChatClientController) loader.getController();
+			
+			controller.getTxtUser().setText("Robert");
+			controller.getTxtServerIP().setText("192.168.178.20");
+			controller.getTxtServerPort().setText("45619");
+			
 			controller.setStage(primaryStage);
 			primaryStage.show();
 		} catch(Exception e) {

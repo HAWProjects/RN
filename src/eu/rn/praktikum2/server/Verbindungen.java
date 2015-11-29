@@ -1,4 +1,4 @@
-package eu.rn.praktikum2;
+package eu.rn.praktikum2.server;
 
 import java.util.HashSet;
 import java.util.Set;

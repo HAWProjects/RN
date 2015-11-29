@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.rn.praktikum2;
+package eu.rn.praktikum2.server;
 
 import java.io.BufferedWriter;
 import java.io.File;

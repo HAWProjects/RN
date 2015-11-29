@@ -23,10 +23,10 @@
       <Pane fx:id="paneContent" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <TextArea fx:id="txtAInput" layoutX="6.0" layoutY="208.0" onKeyReleased="#onKeyPressed" prefHeight="89.0" prefWidth="322.0" />
-            <ScrollPane fx:id="scPaneOutput" layoutX="6.0" layoutY="2.0" prefHeight="203.0" prefWidth="322.0">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-              </content>
+            <ScrollPane fx:id="scPaneOutput" layoutX="6.0" prefHeight="206.0" prefWidth="321.0">
+               <content>
+                  <VBox fx:id="vBoxOutput" prefHeight="203.0" prefWidth="317.0" />
+               </content>
             </ScrollPane>
          </children>
       </Pane>

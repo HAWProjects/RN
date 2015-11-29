@@ -1,4 +1,4 @@
-package eu.rn.praktikum2;
+package eu.rn.praktikum2.server;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

@@ -1,4 +1,4 @@
-package eu.rn.praktikum2;
+package eu.rn.praktikum2.server;
 
 /**
  * <p>Encodes and decodes to and from Base64 notation.</p>
