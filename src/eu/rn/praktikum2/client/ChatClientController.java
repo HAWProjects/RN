@@ -54,7 +54,7 @@ public class ChatClientController {
 		stage.setTitle("ChatClient - User: " + userName);
 		
 		if(isValid(userName, serverIp, serverPort)) {
-			new ChatClient(serverIp, Integer.parseInt(serverPort), userName, this);
+			(new ChatClient(serverIp, Integer.parseInt(serverPort), userName, this)).start();
 		}
 		else {
 			Label error = new Label("Error - Falsche Eingabe!");

@@ -6,9 +6,9 @@ package eu.rn.praktikum2.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.Semaphore;
+
+import javafx.scene.control.Label;
 
 /**
  * Modelliert einen Server, zu dem sich mehrere Clients verbinden können um miteinander zu kommunizieren.
@@ -16,7 +16,7 @@ import java.util.concurrent.Semaphore;
  * @author abt434
  *
  */
-public class ChatServer {
+public class ChatServer extends Thread {
 
 	private final int serverPort;
 	
@@ -28,15 +28,22 @@ public class ChatServer {
 	
 	private Userliste users;
 	
+	private ChatServerController controller;
+	
 	/**
 	 * @param port Port auf dem der Server Anfragen annehmen soll
 	 * @param maxClientAnzahl Anzahl der Clients, die sich verbinden können
 	 */
-	public ChatServer(int port, int maxClientAnzahl) {
+	public ChatServer(int port, int maxClientAnzahl, ChatServerController controller) {
 		serverPort = port;
 		semaphore = new Semaphore(maxClientAnzahl);
 		verbindungen = new Verbindungen();
 		users = new Userliste();
+		this.controller = controller;
+		
+	}
+	
+	public void run(){
 		startServer();
 	}
 
@@ -56,6 +63,7 @@ public class ChatServer {
 			while(true){
 				semaphore.acquire();
 				System.out.println("Server waiting for Connection");
+				controller.getvBoxOutput().getChildren().add(new Label("Server waiting for Connection"));
 				arbeitsSocketConn = mainSocketServer.accept();
 				indexThread++;
 				Verbindung neuesSocket = new Verbindung(indexThread,arbeitsSocketConn,this);
@@ -93,13 +101,17 @@ public class ChatServer {
 	}
 
 	
-	public static void main(String[] args) {
-		new ChatServer(45619, 4);
-	}
+//	public static void main(String[] args) {
+//		new ChatServer(45619, 4);
+//	}
 	
 	public String getUsernames()
 	{
 		return users.getNames();
+	}
+	
+	protected ChatServerController getController(){
+		return controller;
 	}
 
 }

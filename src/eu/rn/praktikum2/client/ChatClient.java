@@ -22,7 +22,7 @@ import javafx.scene.input.KeyEvent;
  * @author abt434
  *
  */
-public class ChatClient {
+public class ChatClient extends Thread{
 
 	private String hostname;
 	private int serverPort;
@@ -47,7 +47,11 @@ public class ChatClient {
 		this.serverPort = serverPort;
 		connected = false;
 		this.controller = controller;
-
+		this.userName = username;
+		
+	}
+	
+	public void run(){
 		startConnection();
 	}
 
@@ -58,7 +62,7 @@ public class ChatClient {
 	 * 
 	 */
 	private void startConnection() {
-		Scanner sc;
+//		Scanner sc;
 		
 		String messageFromServer;
 
@@ -69,9 +73,9 @@ public class ChatClient {
 			connected = false;
 			// myWriter = new MyFileWriter("ChatLogFile.txt", "files/");
 
-			sc = new Scanner(System.in);
-			System.out.println("Bitte Nutzernamen eingeben:");
-			userName = sc.nextLine();
+//			sc = new Scanner(System.in);
+//			System.out.println("Bitte Nutzernamen eingeben:");
+//			userName = sc.nextLine();
 
 			writeToServer("HELO");
 			if (readFromServer().equals("HELO")) {
@@ -96,7 +100,7 @@ public class ChatClient {
 
 									}
 									writeToServer(input);
-									System.out.println("Tach");
+									
 								}
 								
 							}
@@ -149,7 +153,6 @@ public class ChatClient {
 		try {
 			outToServer.writeBytes(input + "\r\n");
 		} catch(IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// myWriter.writeLine("Client: " + input);

@@ -19,6 +19,7 @@ public class ChatServerStart extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("ChatServer");
 			ChatServerController controller = (ChatServerController) loader.getController();
+			controller.getTxtServerport().setText("45619");
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
