@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-import static com.google.common.base.Preconditions.*;
+//import static com.google.common.base.Preconditions.*;
 
 public class ChatServerController {
 	
@@ -44,7 +44,7 @@ public class ChatServerController {
 		String serverport = txtServerport.getText();
 		String clientCount = txtClientCount.getText();
 		if(isValid(serverport, clientCount)){
-			System.out.println("Joho");
+	
 			btnStartServer.setDisable(false);
 			btnStartServer.setVisible(false);
 		(new ChatServer(Integer.parseInt(serverport), Integer.parseInt(clientCount),this)).start();

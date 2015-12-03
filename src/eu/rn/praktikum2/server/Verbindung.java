@@ -80,6 +80,7 @@ public class Verbindung extends Thread {
 	private String readFromClient() throws IOException {
 		String inFromClient = input.readLine();
 		System.out.println("TCP Worker Thread " + threadNumber + " detected job: " + inFromClient);
+		server.writeToSockets(inFromClient);
 		return inFromClient;
 	}
 

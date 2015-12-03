@@ -23,7 +23,7 @@ public class ChatClientStart extends Application {
 			ChatClientController controller = (ChatClientController) loader.getController();
 			
 			controller.getTxtUser().setText("Robert");
-			controller.getTxtServerIP().setText("192.168.178.20");
+			controller.getTxtServerIP().setText("127.0.0.1");
 			controller.getTxtServerPort().setText("45619");
 			
 			controller.setStage(primaryStage);

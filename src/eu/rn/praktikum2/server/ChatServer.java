@@ -63,7 +63,7 @@ public class ChatServer extends Thread {
 			while(true){
 				semaphore.acquire();
 				System.out.println("Server waiting for Connection");
-				controller.getvBoxOutput().getChildren().add(new Label("Server waiting for Connection"));
+//				controller.getvBoxOutput().getChildren().add(new Label("Server waiting for Connection"));
 				arbeitsSocketConn = mainSocketServer.accept();
 				indexThread++;
 				Verbindung neuesSocket = new Verbindung(indexThread,arbeitsSocketConn,this);

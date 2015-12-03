@@ -7,11 +7,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class ChatClientController {
+public class ChatClientController extends Observable {
 	
 	private Stage stage;
 	
@@ -66,20 +68,16 @@ public class ChatClientController {
 	}
 	
 	@FXML
-	protected void onKeyPressed(){		
-//		EventHandler<KeyEvent> event = new EventHandler<KeyEvent>() {
-
-//			@Override
-//			public void handle(KeyEvent event) {
-//				if(event.getCode() == KeyCode.ENTER){
+	protected void onKeyPressed(KeyEvent event){		
+				if(event.getCode() == KeyCode.ENTER){
 //				String text = 	txtAInput.getText();
 //					Label label = new Label(text);
 //					scPaneOutput.setContent(label);
 //					System.out.println("Moin");
-//				}
-//				
-//			}
-//		};
+					benachrichtigeTexteingabe();
+					txtAInput.clear();
+				}
+				
 	}
 	
 	

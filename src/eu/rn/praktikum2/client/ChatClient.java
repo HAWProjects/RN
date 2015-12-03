@@ -22,7 +22,7 @@ import javafx.scene.input.KeyEvent;
  * @author abt434
  *
  */
-public class ChatClient extends Thread{
+public class ChatClient extends Thread implements Observer{
 
 	private String hostname;
 	private int serverPort;
@@ -48,7 +48,7 @@ public class ChatClient extends Thread{
 		connected = false;
 		this.controller = controller;
 		this.userName = username;
-		
+		controller.registriereBeobachter(this);
 	}
 	
 	public void run(){
@@ -83,33 +83,33 @@ public class ChatClient extends Thread{
 				connected = true;
 			}
 
-			Thread t = new Thread() {
-				public void run() {
-					while (true)
-					{
-						
-						controller.getTxtAInput().setOnKeyReleased(new EventHandler<KeyEvent>() {
-							@Override
-							public void handle(KeyEvent event) {
-								if(event.getCode() == KeyCode.ENTER){
-									String input = controller.getTxtAInput().getText();
-//										controller.getvBoxOutput().getChildren().add(label);
-									controller.getTxtAInput().clear();
-									if(input.equals("/users"))
-									{
-
-									}
-									writeToServer(input);
-									
-								}
-								
-							}
-						});
-
-					}
-				}
-			};
-			t.start();
+//			Thread t = new Thread() {
+//				public void run() {
+//					while (true)
+//					{
+//						
+//						controller.getTxtAInput().setOnKeyReleased(new EventHandler<KeyEvent>() {
+//							@Override
+//							public void handle(KeyEvent event) {
+//								if(event.getCode() == KeyCode.ENTER){
+//									String input = controller.getTxtAInput().getText();
+////										controller.getvBoxOutput().getChildren().add(label);
+//									controller.getTxtAInput().clear();
+//									if(input.equals("/users"))
+//									{
+//
+//									}
+//									writeToServer(input);
+//									
+//								}
+//								
+//							}
+//						});
+//
+//					}
+//				}
+//			};
+//			t.start();
 
 			while (connected) {
 
@@ -161,6 +161,18 @@ public class ChatClient extends Thread{
 	public String getUsername()
 	{
 		return userName;
+	}
+
+	@Override
+	public void reagiereAufTexteingabe() {
+		writeToServer(controller.getTxtAInput().getText());
+		
+	}
+
+	@Override
+	public void reagiereAufVerbinden() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
