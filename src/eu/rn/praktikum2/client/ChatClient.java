@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import javax.swing.JTextArea;
-
 /**
  * Modelliert einen Chat-Client mit dem der Benutzer sich mit einem Chat-Server
  * verbinden kann.
@@ -79,7 +77,9 @@ public class ChatClient extends Thread implements Observer
      */
     private void startConnection()
     {
-        // Scanner sc;
+        hostname = gui.getServerIP().getText();
+        serverPort = gui.getServerPort().getText();
+        userName = gui.getUsername().getText();
 
         try
         {
@@ -89,10 +89,6 @@ public class ChatClient extends Thread implements Observer
             connected = false;
             // myWriter = new MyFileWriter("ChatLogFile.txt", "files/");
 
-            // sc = new Scanner(System.in);
-            // System.out.println("Bitte Nutzernamen eingeben:");
-            // userName = sc.nextLine();
-
             writeToServer("HELO");
             if (inFromServer.readLine().equals("HELO"))
             {
@@ -100,42 +96,11 @@ public class ChatClient extends Thread implements Observer
                 connected = true;
             }
 
-            // Thread t = new Thread() {
-            // public void run() {
-            // while (true)
-            // {
-            //
-            // controller.getTxtAInput().setOnKeyReleased(new
-            // EventHandler<KeyEvent>() {
-            // @Override
-            // public void handle(KeyEvent event) {
-            // if(event.getCode() == KeyCode.ENTER){
-            // String input = controller.getTxtAInput().getText();
-            // // controller.getvBoxOutput().getChildren().add(label);
-            // controller.getTxtAInput().clear();
-            // if(input.equals("/users"))
-            // {
-            //
-            // }
-            // writeToServer(input);
-            //
-            // }
-            //
-            // }
-            // });
-            //
-            // }
-            // }
-            // };
-            // t.start();
-
             if (connected)
             {
-                Runnable vomServerLeser = new MyThread(inFromServer, gui.getTextArea());
+                Runnable vomServerLeser = new MyThread();
                 new Thread(vomServerLeser).start();
             }
-
-            // socket.close();
         }
         catch (IOException e)
         {
@@ -184,8 +149,8 @@ public class ChatClient extends Thread implements Observer
 
     public class MyThread implements Runnable
     {
-
-        public MyThread(BufferedReader reader, JTextArea textArea)
+        //FIXME: parameter nicht benutzt
+        public MyThread()
         {
             // store parameter for later user
         }
@@ -202,12 +167,12 @@ public class ChatClient extends Thread implements Observer
                     System.out.println(messageFromServer);
                     if (messageFromServer.equals("Verbindung beendet"))
                     {
-                        connected = false;
+                        socket.close();
                     }
+                    gui.getTextArea().setCaretPosition(gui.getTextArea().getDocument().getLength());
                 }
                 catch (IOException e)
                 {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
