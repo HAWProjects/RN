@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import eu.rn.praktikum.Base64;
+
 
 public class ServerConnector extends Observable
 {
@@ -57,7 +58,7 @@ public class ServerConnector extends Observable
     {
         try
         {
-            input = Base64.encode(input.getBytes());
+            input = Base64.encodeBytes(input.getBytes());
             outToServer.writeBytes(input + "\r\n");
         }
         catch (IOException e)

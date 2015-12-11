@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import eu.rn.praktikum.Base64;
+
 /**
  * Modelliert eine Verbindung zu einem Client
  * 
@@ -54,7 +56,7 @@ public class Verbindung extends Thread {
 					
 				} else
 				{
-					server.writeToSockets(username + ": " + currentInput);
+//					server.writeToSockets(username + ": " + currentInput);
 				}
 
 				if (currentInput.toUpperCase().startsWith("QUIT")) {
@@ -81,7 +83,7 @@ public class Verbindung extends Thread {
 		String inFromClient = input.readLine();
 		inFromClient = new String(Base64.decode(inFromClient));
 		System.out.println("TCP Worker Thread " + threadNumber + " detected job: " + inFromClient);
-		server.writeToSockets(inFromClient);
+		server.writeToSockets(username + ": " + inFromClient);
 		return inFromClient;
 	}
 

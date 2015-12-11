@@ -2,6 +2,7 @@ package eu.rn.praktikum2.protokolle;
 
 import java.io.IOException;
 
+
 public class MyChatProtokoll extends ChatProtokoll
 {
 
@@ -15,7 +16,7 @@ public class MyChatProtokoll extends ChatProtokoll
     public
     void nachrichtSenden(String s)
     {
-        conn.writeToServer(s);
+        conn.writeToServer("MSG " + s);
     }
 
     @Override
@@ -39,8 +40,9 @@ public class MyChatProtokoll extends ChatProtokoll
     }
 
     @Override
-    public void reagiereAufNachricht(String s)
+    public void reagiereAufNachricht(String text)
     {
+        String s = text;
         if(s.equals("Verbindung beendet"))
         {
             try
@@ -53,9 +55,9 @@ public class MyChatProtokoll extends ChatProtokoll
                 e.printStackTrace();
             }
         }
-        else if(/*s.startsWith("MSG")*/true)
+        else /*if(s.startsWith("MSG "))*/
         {
-            leiteNachrichtWeiter(s);
+            leiteNachrichtWeiter(s.replaceFirst("MSG ", ""));
         }
     }
 
