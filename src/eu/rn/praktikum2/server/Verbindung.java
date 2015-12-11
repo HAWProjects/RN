@@ -79,6 +79,7 @@ public class Verbindung extends Thread {
 	 */
 	private String readFromClient() throws IOException {
 		String inFromClient = input.readLine();
+		inFromClient = Base64.decode(inFromClient).toString();
 		System.out.println("TCP Worker Thread " + threadNumber + " detected job: " + inFromClient);
 		server.writeToSockets(inFromClient);
 		return inFromClient;
@@ -92,6 +93,7 @@ public class Verbindung extends Thread {
 	 * @throws IOException
 	 */
 	public synchronized void writeToClient(String value) throws IOException {
+	    value = eu.rn.praktikum.Base64.encodeBytes(value.getBytes());
 		output.writeBytes(value + "\r\n");
 
 		// writer.writeLine(""+ value);

@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+
 /**
  * Modelliert einen Chat-Client mit dem der Benutzer sich mit einem Chat-Server
  * verbinden kann.
@@ -120,6 +122,7 @@ public class ChatClient extends Thread implements Observer
     {
         try
         {
+            input = Base64.encode(input.getBytes());
             outToServer.writeBytes(input + "\r\n");
         }
         catch (IOException e)
@@ -163,6 +166,7 @@ public class ChatClient extends Thread implements Observer
                 try
                 {
                     messageFromServer = readFromServer();
+                    messageFromServer = Base64.decode(messageFromServer).toString();
                     gui.getTextArea().append(messageFromServer+"\r\n");
                     System.out.println(messageFromServer);
                     if (messageFromServer.equals("Verbindung beendet"))
