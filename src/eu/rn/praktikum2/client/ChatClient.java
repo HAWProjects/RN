@@ -111,26 +111,7 @@ public class ChatClient extends Thread implements Observer
 
     }
 
-    /**
-     * Sendet Text an den Server
-     * 
-     * @param input
-     *            Text, der an den Server gesendet werden soll
-     * @throws IOException
-     */
-    private void writeToServer(String input)
-    {
-        try
-        {
-            input = Base64.encode(input.getBytes());
-            outToServer.writeBytes(input + "\r\n");
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        // myWriter.writeLine("Client: " + input);
-    }
+
 
     public String getUsername()
     {
@@ -150,51 +131,7 @@ public class ChatClient extends Thread implements Observer
         startConnection();
     }
 
-    public class MyThread implements Runnable
-    {
-        //FIXME: parameter nicht benutzt
-        public MyThread()
-        {
-            // store parameter for later user
-        }
-
-        public void run()
-        {
-            String messageFromServer;
-            while (connected)
-            {
-                try
-                {
-                    messageFromServer = readFromServer();
-                    messageFromServer = Base64.decode(messageFromServer).toString();
-                    gui.getTextArea().append(messageFromServer+"\r\n");
-                    System.out.println(messageFromServer);
-                    if (messageFromServer.equals("Verbindung beendet"))
-                    {
-                        socket.close();
-                    }
-                    gui.getTextArea().setCaretPosition(gui.getTextArea().getDocument().getLength());
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        /**
-         * 
-         * Liest eine Zeile vom Server
-         * 
-         * @throws IOException
-         */
-        private String readFromServer() throws IOException
-        {
-            String result = inFromServer.readLine();
-            // myWriter.writeLine("Server: " + result);
-            return result;
-        }
-    }
+    
 
     public static void main(String[] args)
     {
