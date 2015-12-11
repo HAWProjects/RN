@@ -13,6 +13,9 @@ import java.net.Socket;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
+import eu.rn.praktikum2.protokolle.ChatProtokoll;
+import eu.rn.praktikum2.protokolle.MyChatProtokoll;
+
 /**
  * Modelliert einen Chat-Client mit dem der Benutzer sich mit einem Chat-Server
  * verbinden kann.
@@ -34,6 +37,8 @@ public class ChatClient extends Thread implements Observer
     private BufferedReader inFromServer;
 
     private ChatClientSwingGUI gui;
+    
+    private ChatProtokoll protokoll;
 
     /**
      * @param hostname
@@ -41,12 +46,13 @@ public class ChatClient extends Thread implements Observer
      * @param serverPort
      *            Port auf dem der Server Anfragen annimmt
      */
-    public ChatClient(String hostname, String serverPort, String username)
+    public ChatClient(String hostname, String serverPort, String username, ChatProtokoll protokoll)
     {
         this.hostname = hostname;
         this.serverPort = serverPort;
         connected = false;
         this.userName = username;
+        this.protokoll = protokoll;
         gui = new ChatClientSwingGUI();
         gui.getUsername().setText(username);
         gui.getServerIP().setText(hostname);
@@ -91,12 +97,7 @@ public class ChatClient extends Thread implements Observer
             connected = false;
             // myWriter = new MyFileWriter("ChatLogFile.txt", "files/");
 
-            writeToServer("HELO");
-            if (inFromServer.readLine().equals("HELO"))
-            {
-                writeToServer("USER " + userName);
-                connected = true;
-            }
+            
 
             if (connected)
             {
@@ -121,7 +122,7 @@ public class ChatClient extends Thread implements Observer
     @Override
     public void reagiereAufTexteingabe()
     {
-        writeToServer(gui.getUserInputField().getText());
+        protokoll.nachrichtSenden(gui.getUserInputField().getText());
         gui.getUserInputField().setText("");
     }
 
@@ -135,7 +136,7 @@ public class ChatClient extends Thread implements Observer
 
     public static void main(String[] args)
     {
-        new ChatClient("127.0.0.1", "45619", "Robert");
+        new ChatClient("127.0.0.1", "45619", "Robert", new MyChatProtokoll());
     }
 
 }

@@ -32,7 +32,7 @@ public class ServerConnector extends Observable
      *            Text, der an den Server gesendet werden soll
      * @throws IOException
      */
-    private void writeToServer(String input)
+    public void writeToServer(String input)
     {
         try
         {
@@ -77,17 +77,18 @@ public class ServerConnector extends Observable
             }
         }
 
-        /**
-         * 
-         * Liest eine Zeile vom Server
-         * 
-         * @throws IOException
-         */
-        private String readFromServer() throws IOException
-        {
-            // myWriter.writeLine("Server: " + result);
-            return new String(Base64.decode(inFromServer.readLine()));
-        }
+        
+    }
+    /**
+     * 
+     * Liest eine Zeile vom Server
+     * 
+     * @throws IOException
+     */
+    public String readFromServer() throws IOException
+    {
+        // myWriter.writeLine("Server: " + result);
+        return new String(Base64.decode(inFromServer.readLine()));
     }
     
 }

@@ -9,15 +9,23 @@ import eu.rn.praktikum2.client.ServerConnector;
 public abstract class ChatProtokoll extends Observable implements Observer
 {
 
-    private ServerConnector conn;
-    
-    public ChatProtokoll(String hostname, String serverPort) throws Exception
+    protected ServerConnector conn;
+
+    public ChatProtokoll()
+    {
+        
+    }
+
+    public void verbinde(String hostname, String serverPort) throws Exception
     {
         conn = new ServerConnector(hostname, serverPort);
     }
-    
-    abstract void nachrichtSenden(String s);
-    
-    abstract void handshake();
-    
+
+    // sendet auf steuerbefehle wie /user
+    abstract public void nachrichtSenden(String s);
+
+
+    abstract public void handshake(Object[] params);
+
+
 }
