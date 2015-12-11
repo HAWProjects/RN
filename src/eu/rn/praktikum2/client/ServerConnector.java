@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
@@ -21,8 +20,27 @@ public class ServerConnector extends Observable
         socket = new Socket(hostname, Integer.parseInt(serverPort));
         outToServer = new DataOutputStream(socket.getOutputStream());
         inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        Runnable reader = new MyThread();
-        new Thread(reader).start();
+        new Thread()
+        {
+            public void run()
+            {
+                String messageFromServer;
+                while (true)
+                {
+                    try
+                    {
+                        messageFromServer = readFromServer();
+                        gui.getTextArea().append(messageFromServer+"\r\n");
+
+                        gui.getTextArea().setCaretPosition(gui.getTextArea().getDocument().getLength());
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
     }
     
     /**
@@ -46,39 +64,6 @@ public class ServerConnector extends Observable
         // myWriter.writeLine("Client: " + input);
     }
     
-    public class MyThread implements Runnable
-    {
-        //FIXME: parameter nicht benutzt
-        public MyThread()
-        {
-            // store parameter for later user
-        }
-
-        public void run()
-        {
-            String messageFromServer;
-            while (true)
-            {
-                try
-                {
-                    messageFromServer = readFromServer();
-                    gui.getTextArea().append(messageFromServer+"\r\n");
-                    System.out.println(messageFromServer);
-                    if (messageFromServer.equals("Verbindung beendet"))
-                    {
-                        socket.close();
-                    }
-                    gui.getTextArea().setCaretPosition(gui.getTextArea().getDocument().getLength());
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        
-    }
     /**
      * 
      * Liest eine Zeile vom Server
