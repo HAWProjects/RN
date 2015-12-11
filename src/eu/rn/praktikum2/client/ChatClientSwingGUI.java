@@ -70,27 +70,6 @@ public class ChatClientSwingGUI
         // text area stays on the last line as subsequent lines are
         // added and auto-scrolls
         userInputField = new JTextField(30);
-//        userInputField.addActionListener(new ActionListener()
-//        {
-//            public void actionPerformed(ActionEvent event)
-//            {
-//                // We get the text from the textfield
-//                String fromUser = userInputField.getText();
-//
-//                if (fromUser != null)
-//                {
-//                    // We append the text from the user
-//                    textArea.append("Asim: " + fromUser + "\n");
-//
-//                    // The pane auto-scrolls with each new response added
-//                    textArea.setCaretPosition(textArea.getDocument().getLength());
-//                    // We reset our text field to "" each time the user presses
-//                    // Enter
-//                    userInputField.setText("");
-//                }
-//            }
-//        });
-        
         
         // Chatpanel
         chatPanel = new JPanel();

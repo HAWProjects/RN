@@ -92,7 +92,7 @@ public class ChatClient extends Thread implements Observer
             // myWriter = new MyFileWriter("ChatLogFile.txt", "files/");
 
             writeToServer("HELO");
-            if (inFromServer.readLine().equals("HELO"))
+            if (readFromServer().equals("HELO"))
             {
                 writeToServer("USER " + userName);
                 connected = true;
@@ -166,7 +166,6 @@ public class ChatClient extends Thread implements Observer
                 try
                 {
                     messageFromServer = readFromServer();
-                    messageFromServer = Base64.decode(messageFromServer).toString();
                     gui.getTextArea().append(messageFromServer+"\r\n");
                     System.out.println(messageFromServer);
                     if (messageFromServer.equals("Verbindung beendet"))
@@ -182,20 +181,20 @@ public class ChatClient extends Thread implements Observer
             }
         }
 
-        /**
-         * 
-         * Liest eine Zeile vom Server
-         * 
-         * @throws IOException
-         */
-        private String readFromServer() throws IOException
-        {
-            String result = inFromServer.readLine();
-            // myWriter.writeLine("Server: " + result);
-            return result;
-        }
     }
 
+    /**
+     * 
+     * Liest eine Zeile vom Server
+     * 
+     * @throws IOException
+     */
+    private String readFromServer() throws IOException
+    {
+        // myWriter.writeLine("Server: " + result);
+        return new String(Base64.decode(inFromServer.readLine()));
+    }
+    
     public static void main(String[] args)
     {
         new ChatClient("127.0.0.1", "45619", "Robert");
