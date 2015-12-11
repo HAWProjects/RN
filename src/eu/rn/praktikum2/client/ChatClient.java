@@ -5,13 +5,7 @@ package eu.rn.praktikum2.client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
-
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 import eu.rn.praktikum2.protokolle.ChatProtokoll;
 import eu.rn.praktikum2.protokolle.MyChatProtokoll;
@@ -29,15 +23,8 @@ public class ChatClient extends Thread implements Observer
     private String hostname;
     private String serverPort;
     private String userName;
-    private Socket socket;
-    private boolean connected;
-    // private MyFileWriter myWriter;
-
-    private DataOutputStream outToServer;
-    private BufferedReader inFromServer;
 
     private ChatClientSwingGUI gui;
-    
     private ChatProtokoll protokoll;
 
     /**
@@ -50,9 +37,9 @@ public class ChatClient extends Thread implements Observer
     {
         this.hostname = hostname;
         this.serverPort = serverPort;
-        connected = false;
         this.userName = username;
         this.protokoll = protokoll;
+        protokoll.registriereBeobachter(this);
         gui = new ChatClientSwingGUI();
         gui.getUsername().setText(username);
         gui.getServerIP().setText(hostname);
@@ -62,7 +49,7 @@ public class ChatClient extends Thread implements Observer
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                reagiereAufVerbinden();
+                startConnection();
             }
         });
 
@@ -71,7 +58,8 @@ public class ChatClient extends Thread implements Observer
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                reagiereAufTexteingabe();
+                protokoll.nachrichtSenden(gui.getUserInputField().getText());
+                gui.getUserInputField().setText("");
             }
         });
 
@@ -88,51 +76,25 @@ public class ChatClient extends Thread implements Observer
         hostname = gui.getServerIP().getText();
         serverPort = gui.getServerPort().getText();
         userName = gui.getUsername().getText();
-
         try
         {
-            socket = new Socket(hostname, Integer.parseInt(serverPort));
-            outToServer = new DataOutputStream(socket.getOutputStream());
-            inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            connected = false;
-            // myWriter = new MyFileWriter("ChatLogFile.txt", "files/");
-
-            
-
-            if (connected)
-            {
-                Runnable vomServerLeser = new MyThread();
-                new Thread(vomServerLeser).start();
-            }
+            protokoll.verbinde(hostname, serverPort);
+            protokoll.handshake();
+            protokoll.legeNutzernamenFest(userName);
         }
-        catch (IOException e)
+        catch (Exception e)
         {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-    }
-
-
-
-    public String getUsername()
-    {
-        return userName;
     }
 
     @Override
-    public void reagiereAufTexteingabe()
+    public void reagiereAufNachricht(String s)
     {
-        protokoll.nachrichtSenden(gui.getUserInputField().getText());
-        gui.getUserInputField().setText("");
+        gui.getTextArea().append(s+"\r\n");
+        gui.getTextArea().setCaretPosition(gui.getTextArea().getDocument().getLength());
     }
-
-    @Override
-    public void reagiereAufVerbinden()
-    {
-        startConnection();
-    }
-
-    
 
     public static void main(String[] args)
     {

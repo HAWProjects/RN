@@ -20,19 +20,17 @@ public class ServerConnector extends Observable
         socket = new Socket(hostname, Integer.parseInt(serverPort));
         outToServer = new DataOutputStream(socket.getOutputStream());
         inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        
+        // ständig Nachrichten vom Server weiterleiten
         new Thread()
         {
             public void run()
             {
-                String messageFromServer;
                 while (true)
                 {
                     try
                     {
-                        messageFromServer = readFromServer();
-                        gui.getTextArea().append(messageFromServer+"\r\n");
-
-                        gui.getTextArea().setCaretPosition(gui.getTextArea().getDocument().getLength());
+                        leiteNachrichtWeiter(readFromServer());
                     }
                     catch (IOException e)
                     {
@@ -43,6 +41,11 @@ public class ServerConnector extends Observable
         }.start();
     }
     
+    public Socket getSocket()
+    {
+        return socket;
+    }
+
     /**
      * Sendet Text an den Server
      * 

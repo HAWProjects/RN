@@ -12,19 +12,11 @@ public abstract class Observable {
 		beobachter = new HashSet<Observer>();
 	}
 	
-	protected void benachrichtigeTexteingabe()
+	protected void leiteNachrichtWeiter(String s)
 	{
 		for(Observer o : beobachter)
 		{
-			o.reagiereAufTexteingabe();
-		}
-	}
-	
-	protected void benachrichtigeVerbinden()
-	{
-		for(Observer o : beobachter)
-		{
-			o.reagiereAufVerbinden();
+			o.reagiereAufNachricht(s);
 		}
 	}
 	
