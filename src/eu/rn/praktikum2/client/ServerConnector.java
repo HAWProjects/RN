@@ -30,17 +30,15 @@ public class ServerConnector extends Observable
             {
                 try
                 {
-                while (!socket.isClosed())
+                while (inFromServer.ready())
                 {
-                    try
-                    {
                         leiteNachrichtWeiter(readFromServer());
-                    }
-                    catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    }
                 }
+                }
+                catch (IOException e)
+                {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }finally
                 {
                     try

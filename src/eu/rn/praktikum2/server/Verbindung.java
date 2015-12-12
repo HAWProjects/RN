@@ -14,64 +14,78 @@ import eu.rn.praktikum.Base64;
  * @author abt434
  *
  */
-public class Verbindung extends Thread {
+public class Verbindung extends Thread
+{
 
-	private int threadNumber;
-	private Socket socket;
-	private ChatServer server;
-	private BufferedReader input;
-	private DataOutputStream output;
-	private boolean working = false;
-	private MyFileWriter writer;
-	private String username;
+    private int threadNumber;
+    private Socket socket;
+    private ChatServer server;
+    private BufferedReader input;
+    private DataOutputStream output;
+    private boolean working = false;
+//    private MyFileWriter writer;
+    private String username;
 
-	public Verbindung(int indexThread, Socket arbeitsSocketConn, ChatServer chatServer) {
-		this.threadNumber = indexThread;
-		this.socket = arbeitsSocketConn;
-		this.server = chatServer;
+    public Verbindung(int indexThread, Socket arbeitsSocketConn,
+            ChatServer chatServer)
+    {
+        this.threadNumber = indexThread;
+        this.socket = arbeitsSocketConn;
+        this.server = chatServer;
 
-	}
+    }
 
-	@Override
-	public void run() {
-		String currentInput;
-		System.out.println("TCP Worker Thread " + threadNumber + " is running until QUIT is received!");
-		try {
-			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			output = new DataOutputStream(socket.getOutputStream());
-			writer = new MyFileWriter("ChatLogFile.txt", "files/");
+    @Override
+    public void run()
+    {
+        String currentInput;
+        System.out.println("TCP Worker Thread " + threadNumber
+                + " is running until QUIT is received!");
+        try
+        {
+            input = new BufferedReader(new InputStreamReader(
+                    socket.getInputStream()));
+            output = new DataOutputStream(socket.getOutputStream());
+//            writer = new MyFileWriter("ChatLogFile.txt", "files/");
 
-			if (readFromClient().equals("HELO")) {
-				writeToClient("HELO");
-				username = readFromClient().replaceFirst("USER ", "");
-				server.writeToSockets(username+" hat den Chat betreten.");
-				working = true;
-			}
+            if (readFromClient().equals("HELO"))
+            {
+                writeToClient("HELO");
+                username = readFromClient().replaceFirst("USER ", "");
+                server.writeToSockets(username + " hat den Chat betreten.");
+                working = true;
+            }
 
-			while (working) {
-				currentInput = readFromClient();
-				if (currentInput.equals("/users")) {
-					writeToClient(server.getUsernames());
-				} else
-//				{
-//					server.writeToSockets(username + ": " + currentInput);
-//				}
-				if (currentInput.toUpperCase().startsWith("QUIT")) {
-					writeToClient("Verbindung beendet");
-					synchronized(server)
-					{
-					    server.getVerbindungen().remove(this);
-					}
-					working = false;
-				}
-			}
+            while (working)
+            {
+                currentInput = readFromClient();
+                if (currentInput.equals("/users"))
+                {
+                    writeToClient(server.getUsernames());
+                }
+                else
+                // {
+                // server.writeToSockets(username + ": " + currentInput);
+                // }
+                if (currentInput.toUpperCase().startsWith("QUIT"))
+                {
+                    writeToClient("Verbindung beendet");
+                    server.getVerbindungen().entferne(this);
+                    working = false;
+                }
+            }
 
-		} catch (Exception e) {
+        }
+        catch (Exception e)
+        {
 
-		} finally {
-			System.out.println("TCP Worker Thread " + threadNumber + " stopped!");
-			server.getSemaphore().release();
-			try
+        }
+        finally
+        {
+            System.out.println("TCP Worker Thread " + threadNumber
+                    + " stopped!");
+            server.getSemaphore().release();
+            try
             {
                 socket.close();
             }
@@ -80,34 +94,37 @@ public class Verbindung extends Thread {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-		}
-	}
+        }
+    }
 
-	/**
-	 * Liest eine Zeile vom Client
-	 * 
-	 * @throws IOException
-	 */
-	private String readFromClient() throws IOException {
-		String inFromClient = input.readLine();
-		inFromClient = new String(Base64.decode(inFromClient));
-		System.out.println("TCP Worker Thread " + threadNumber + " detected job: " + inFromClient);
-		server.writeToSockets(username + ": " + inFromClient);
-		return inFromClient;
-	}
+    /**
+     * Liest eine Zeile vom Client
+     * 
+     * @throws IOException
+     */
+    private String readFromClient() throws IOException
+    {
+        String inFromClient = input.readLine();
+        inFromClient = new String(Base64.decode(inFromClient));
+        System.out.println("TCP Worker Thread " + threadNumber
+                + " detected job: " + inFromClient);
+        server.writeToSockets(username + ": " + inFromClient);
+        return inFromClient;
+    }
 
-	/**
-	 * Sendet einen Text an den Client
-	 * 
-	 * @param value
-	 *            der zu sendende Text
-	 * @throws IOException
-	 */
-	public synchronized void writeToClient(String value) throws IOException {
-	    value = eu.rn.praktikum.Base64.encodeBytes(value.getBytes());
-		output.writeBytes(value + "\r\n");
+    /**
+     * Sendet einen Text an den Client
+     * 
+     * @param value
+     *            der zu sendende Text
+     * @throws IOException
+     */
+    public synchronized void writeToClient(String value) throws IOException
+    {
+        value = eu.rn.praktikum.Base64.encodeBytes(value.getBytes());
+        output.writeBytes(value + "\r\n");
 
-		// writer.writeLine(""+ value);
-	}
+        // writer.writeLine(""+ value);
+    }
 
 }

@@ -33,18 +33,18 @@ public class MyChatProtokoll extends ChatProtokoll
     void handshake()
     {
         conn.writeToServer("HELO");
-        try
-        {
-            if (!conn.readFromServer().equals("HELO"))
-            {
-                conn.getSocket().close();
-            }
-        }
-        catch (IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+//        try
+//        {
+//            if (!conn.readFromServer().equals("HELO"))
+//            {
+//                conn.getSocket().close();
+//            }
+//        }
+//        catch (IOException e)
+//        {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
 
     }
 

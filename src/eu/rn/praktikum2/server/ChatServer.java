@@ -16,7 +16,7 @@ import java.util.concurrent.Semaphore;
  * @author abt434
  *
  */
-public class ChatServer extends Thread {
+public class ChatServer{
 
 	private final int serverPort;
 	
@@ -24,33 +24,25 @@ public class ChatServer extends Thread {
 	
 	private MyFileWriter writer;
 	
-	private Set<Verbindung> verbindungen;
+	private Verbindungen verbindungen;
 	
 	private Userliste users;
-	
-	private ChatServerController controller;
 	
 	/**
 	 * @param port Port auf dem der Server Anfragen annehmen soll
 	 * @param maxClientAnzahl Anzahl der Clients, die sich verbinden können
 	 */
-	public ChatServer(int port, int maxClientAnzahl, ChatServerController controller) {
+	public ChatServer(int port, int maxClientAnzahl) {
 		serverPort = port;
 		semaphore = new Semaphore(maxClientAnzahl);
-		verbindungen = new HashSet<Verbindung>();
+		verbindungen = new Verbindungen();
 		users = new Userliste();
-		this.controller = controller;
-		
 	}
 	
-	public Set<Verbindung> getVerbindungen()
+	public Verbindungen getVerbindungen()
     {
         return verbindungen;
     }
-
-    public void run(){
-		startServer();
-	}
 
 	/**
 	 * Startet den Chat-Server
@@ -61,9 +53,8 @@ public class ChatServer extends Thread {
 		
 		int indexThread = 0;
 		try{
-			writer = new MyFileWriter("ChatLogFile.txt", "files/");
+//			writer = new MyFileWriter("ChatLogFile.txt", "files/");
 			mainSocketServer = new ServerSocket(serverPort);
-			
 			
 			while(true){
 				semaphore.acquire();
@@ -71,15 +62,12 @@ public class ChatServer extends Thread {
 //				controller.getvBoxOutput().getChildren().add(new Label("Server waiting for Connection"));
 				arbeitsSocketConn = mainSocketServer.accept();
 				indexThread++;
-				Verbindung neuesSocket = new Verbindung(indexThread,arbeitsSocketConn,this);
-				synchronized(this)
-				{
-				verbindungen.add(neuesSocket);
-				}
-				neuesSocket.start();
+				Verbindung neueVerbindung = new Verbindung(indexThread,arbeitsSocketConn,this);
+				verbindungen.fuegeHinzu(neueVerbindung);
+				neueVerbindung.start();
 			}
 		}catch(Exception e){
-			
+			e.printStackTrace();
 		}
 		
 	}
@@ -90,7 +78,7 @@ public class ChatServer extends Thread {
 	 */
 	public synchronized void writeToSockets(String text)
 	{
-	    for(Verbindung s : verbindungen)
+	    for(Verbindung s : verbindungen.getVerbindungen())
 	    {
 	        try
             {
@@ -107,19 +95,16 @@ public class ChatServer extends Thread {
 	public Semaphore getSemaphore(){
 		return semaphore;
 	}
-
-	
-//	public static void main(String[] args) {
-//		new ChatServer(45619, 4);
-//	}
 	
 	public String getUsernames()
 	{
 		return users.getNames();
 	}
+
+	public static void main(String[] args)
+    {
+        new ChatServer(45619, 5).startServer();
+    }
 	
-	protected ChatServerController getController(){
-		return controller;
-	}
 
 }
