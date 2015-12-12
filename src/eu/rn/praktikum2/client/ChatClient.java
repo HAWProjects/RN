@@ -5,6 +5,8 @@ package eu.rn.praktikum2.client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 import eu.rn.praktikum2.protokolle.ChatProtokoll;
@@ -60,6 +62,14 @@ public class ChatClient extends Thread implements Observer
             {
                 protokoll.nachrichtSenden(gui.getUserInputField().getText());
                 gui.getUserInputField().setText("");
+            }
+        });
+        gui.getFrame().addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                protokoll.verbindungBeenden();
             }
         });
 

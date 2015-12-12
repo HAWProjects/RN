@@ -50,20 +50,19 @@ public class Verbindung extends Thread {
 			while (working) {
 				currentInput = readFromClient();
 				if (currentInput.equals("/users")) {
-
 					writeToClient(server.getUsernames());
-				
-					
 				} else
 				{
 //					server.writeToSockets(username + ": " + currentInput);
 				}
-
 				if (currentInput.toUpperCase().startsWith("QUIT")) {
 					writeToClient("Verbindung beendet");
+					synchronized(server)
+					{
+					    server.getVerbindungen().remove(this);
+					}
 					working = false;
 				}
-
 			}
 
 		} catch (Exception e) {
@@ -71,6 +70,15 @@ public class Verbindung extends Thread {
 		} finally {
 			System.out.println("TCP Worker Thread " + threadNumber + " stopped!");
 			server.getSemaphore().release();
+			try
+            {
+                socket.close();
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 		}
 	}
 

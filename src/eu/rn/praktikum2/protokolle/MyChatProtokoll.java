@@ -73,7 +73,10 @@ public class MyChatProtokoll extends ChatProtokoll
         conn.writeToServer("QUIT");
         try
         {
-            conn.getSocket().close();
+            if(conn.readFromServer().equals("Verbindung beendet"))
+            {
+                conn.beendeVerbindung();
+            }
         }
         catch (IOException e)
         {

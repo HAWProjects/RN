@@ -2,6 +2,7 @@ package eu.rn.praktikum2.client;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.WindowListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -26,6 +27,12 @@ public class ChatClientSwingGUI
   private JTextField userInputField;
     
     
+    public JFrame getFrame()
+{
+    return frame;
+}
+
+
     public JTextField getUserInputField()
 {
     return userInputField;

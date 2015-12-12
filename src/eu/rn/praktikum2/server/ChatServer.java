@@ -6,9 +6,9 @@ package eu.rn.praktikum2.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Semaphore;
-
-import javafx.scene.control.Label;
 
 /**
  * Modelliert einen Server, zu dem sich mehrere Clients verbinden können um miteinander zu kommunizieren.
@@ -24,7 +24,7 @@ public class ChatServer extends Thread {
 	
 	private MyFileWriter writer;
 	
-	private Verbindungen verbindungen;
+	private Set<Verbindung> verbindungen;
 	
 	private Userliste users;
 	
@@ -37,13 +37,18 @@ public class ChatServer extends Thread {
 	public ChatServer(int port, int maxClientAnzahl, ChatServerController controller) {
 		serverPort = port;
 		semaphore = new Semaphore(maxClientAnzahl);
-		verbindungen = new Verbindungen();
+		verbindungen = new HashSet<Verbindung>();
 		users = new Userliste();
 		this.controller = controller;
 		
 	}
 	
-	public void run(){
+	public Set<Verbindung> getVerbindungen()
+    {
+        return verbindungen;
+    }
+
+    public void run(){
 		startServer();
 	}
 
@@ -67,7 +72,10 @@ public class ChatServer extends Thread {
 				arbeitsSocketConn = mainSocketServer.accept();
 				indexThread++;
 				Verbindung neuesSocket = new Verbindung(indexThread,arbeitsSocketConn,this);
-				verbindungen.fuegeHinzu(neuesSocket);
+				synchronized(this)
+				{
+				verbindungen.add(neuesSocket);
+				}
 				neuesSocket.start();
 			}
 		}catch(Exception e){
@@ -82,7 +90,7 @@ public class ChatServer extends Thread {
 	 */
 	public synchronized void writeToSockets(String text)
 	{
-	    for(Verbindung s : verbindungen.getVerbindungen())
+	    for(Verbindung s : verbindungen)
 	    {
 	        try
             {

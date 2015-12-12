@@ -15,12 +15,12 @@ public abstract class ChatProtokoll extends Observable implements Observer
     }
 
     // sendet auch steuerbefehle wie /user
-    abstract public void nachrichtSenden(String s);
+    public abstract void nachrichtSenden(String s);
 
-    abstract public void handshake();
+    public abstract void handshake();
 
     public abstract void legeNutzernamenFest(String userName);
     
-    abstract void verbindungBeenden();
+    public abstract void verbindungBeenden();
 
 }

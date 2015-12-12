@@ -15,6 +15,7 @@ public class ServerConnector extends Observable
     private Socket socket;
     private DataOutputStream outToServer;
     private BufferedReader inFromServer;
+    private Thread reader;
 
     public ServerConnector(String hostname, String serverPort) throws Exception
     {
@@ -23,10 +24,12 @@ public class ServerConnector extends Observable
         inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         
         // ständig Nachrichten vom Server weiterleiten
-        new Thread()
+        reader = new Thread()
         {
             public void run()
             {
+                try
+                {
                 while (true)
                 {
                     try
@@ -38,8 +41,21 @@ public class ServerConnector extends Observable
                         e.printStackTrace();
                     }
                 }
+                }finally
+                {
+                    try
+                    {
+                        socket.close();
+                    }
+                    catch (IOException e)
+                    {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
             }
-        }.start();
+        };
+        reader.start();
     }
     
     public Socket getSocket()
@@ -78,6 +94,11 @@ public class ServerConnector extends Observable
     {
         // myWriter.writeLine("Server: " + result);
         return new String(Base64.decode(inFromServer.readLine()));
+    }
+    
+    public void beendeVerbindung()
+    {
+        reader.interrupt();
     }
     
 }
