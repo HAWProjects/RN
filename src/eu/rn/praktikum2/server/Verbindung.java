@@ -43,7 +43,8 @@ public class Verbindung extends Thread {
 
 			if (readFromClient().equals("HELO")) {
 				writeToClient("HELO");
-				username = readFromClient().replace("USER ", "");
+				username = readFromClient().replaceFirst("USER ", "");
+				server.writeToSockets(username+" hat den Chat betreten.");
 				working = true;
 			}
 
@@ -52,9 +53,9 @@ public class Verbindung extends Thread {
 				if (currentInput.equals("/users")) {
 					writeToClient(server.getUsernames());
 				} else
-				{
+//				{
 //					server.writeToSockets(username + ": " + currentInput);
-				}
+//				}
 				if (currentInput.toUpperCase().startsWith("QUIT")) {
 					writeToClient("Verbindung beendet");
 					synchronized(server)

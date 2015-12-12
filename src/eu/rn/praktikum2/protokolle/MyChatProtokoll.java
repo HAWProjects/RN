@@ -16,7 +16,16 @@ public class MyChatProtokoll extends ChatProtokoll
     public
     void nachrichtSenden(String s)
     {
-        conn.writeToServer("MSG " + s);
+        String nachricht = s;
+        if(s.equals("/users"))
+        {
+            
+        }
+        else
+        {
+        nachricht = "MSG " + s;
+        }
+        conn.writeToServer(nachricht);
     }
 
     @Override
@@ -55,7 +64,7 @@ public class MyChatProtokoll extends ChatProtokoll
                 e.printStackTrace();
             }
         }
-        else /*if(s.startsWith("MSG "))*/
+        else if(s.startsWith("MSG "))
         {
             leiteNachrichtWeiter(s.replaceFirst("MSG ", ""));
         }

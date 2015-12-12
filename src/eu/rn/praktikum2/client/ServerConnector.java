@@ -30,7 +30,7 @@ public class ServerConnector extends Observable
             {
                 try
                 {
-                while (true)
+                while (!socket.isClosed())
                 {
                     try
                     {
