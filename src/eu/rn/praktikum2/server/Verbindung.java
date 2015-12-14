@@ -42,6 +42,7 @@ public class Verbindung extends Thread {
 			if (readFromClient().equals("HELO")) {
 				writeToClient("HELO");
 				username = readFromClient().replace("USER ", "");
+				server.getUsernames().fuegeHinzu(username);
 				working = true;
 			}
 
@@ -49,7 +50,7 @@ public class Verbindung extends Thread {
 				currentInput = readFromClient();
 				if (currentInput.equals("/users")) {
 
-					writeToClient(server.getUsernames());
+					writeToClient(server.getUsernames().getNames());
 				
 					
 				} else

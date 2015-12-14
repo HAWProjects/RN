@@ -105,9 +105,9 @@ public class ChatServer extends Thread {
 //		new ChatServer(45619, 4);
 //	}
 	
-	public String getUsernames()
+	public Userliste getUsernames()
 	{
-		return users.getNames();
+		return users;
 	}
 	
 	protected ChatServerController getController(){
