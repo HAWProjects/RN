@@ -81,7 +81,7 @@ public class Verbindung extends Thread {
 		String inFromClient = input.readLine();
 		inFromClient = new String(Base64.decode(inFromClient));
 		System.out.println("TCP Worker Thread " + threadNumber + " detected job: " + inFromClient);
-		server.writeToSockets(inFromClient);
+//		server.writeToSockets(inFromClient);
 		return inFromClient;
 	}
 
