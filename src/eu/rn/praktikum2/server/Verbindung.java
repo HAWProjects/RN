@@ -48,20 +48,18 @@ public class Verbindung extends Thread {
 
 			while (working) {
 				currentInput = readFromClient();
-				if (currentInput.equals("/users")) {
+				if (currentInput.equals("/quit")) {
+				    writeToClient("Verbindung beendet");
+				    working = false;
+				}
+				else if (currentInput.equals("/users")) {
 
 					writeToClient(server.getUsernames().getNames());
-				
-					
 				} else
 				{
 					server.writeToSockets(username + ": " + currentInput);
 				}
 
-				if (currentInput.toUpperCase().startsWith("QUIT")) {
-					writeToClient("Verbindung beendet");
-					working = false;
-				}
 
 			}
 
@@ -69,7 +67,19 @@ public class Verbindung extends Thread {
 
 		} finally {
 			System.out.println("TCP Worker Thread " + threadNumber + " stopped!");
+			server.getUsernames().entferne(username);
+			server.getVerbindungen().getVerbindungen().remove(this);
+			try
+            {
+                socket.close();
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 			server.getSemaphore().release();
+			server.writeToSockets(username + " hat den chat verlassen.");
 		}
 	}
 

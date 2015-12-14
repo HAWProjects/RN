@@ -192,7 +192,14 @@ public class ChatClient extends Thread implements Observer
     private String readFromServer() throws IOException
     {
         // myWriter.writeLine("Server: " + result);
+        if(socket.isClosed()){
+            connected = false;
+            return "";
+        }
+        else
+        {
         return new String(Base64.decode(inFromServer.readLine()));
+        }
     }
     
     public static void main(String[] args)

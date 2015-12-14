@@ -110,7 +110,12 @@ public class ChatServer extends Thread {
 		return users;
 	}
 	
-	protected ChatServerController getController(){
+	public Verbindungen getVerbindungen()
+    {
+        return verbindungen;
+    }
+
+    protected ChatServerController getController(){
 		return controller;
 	}
 
