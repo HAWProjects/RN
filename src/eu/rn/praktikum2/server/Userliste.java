@@ -23,8 +23,8 @@ public class Userliste {
 		names.remove(name);
 	}
 	
-	public String getNames()
+	public Set<String> getNames()
 	{
-		return names.toString();
+		return names;
 	}
 }

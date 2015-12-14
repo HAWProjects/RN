@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Set;
 
 /**
  * Modelliert eine Verbindung zu einem Client
@@ -42,19 +43,37 @@ public class Verbindung extends Thread {
 			if (readFromClient().equals("HELO")) {
 				writeToClient("HELO");
 				username = readFromClient().replace("USER ", "");
+				Set<String> users = server.getUsernames().getNames();
+				if(users.contains(username))
+				{
+				    for (int i = 2; i < Integer.MAX_VALUE; i++)
+                    {
+                        if(!users.contains(username + i))
+                        {
+                            username += i;
+                            break;
+                        }
+                    }
+				    writeToClient("gewünschter Nutzname belegt. Sie heißen nun "+username);
+				}
 				server.getUsernames().fuegeHinzu(username);
 				working = true;
-			}
+				}
+			
 
 			while (working) {
 				currentInput = readFromClient();
-				if (currentInput.equals("/quit")) {
+				if(currentInput.length() > 500)
+				{
+				    writeToClient("Eingabe darf max. 500 Zeichen sein.");
+				}
+				else if (currentInput.equals("/quit")) {
 				    writeToClient("Verbindung beendet");
 				    working = false;
 				}
 				else if (currentInput.equals("/users")) {
 
-					writeToClient(server.getUsernames().getNames());
+					writeToClient(server.getUsernames().getNames().toString());
 				} else
 				{
 					server.writeToSockets(username + ": " + currentInput);
