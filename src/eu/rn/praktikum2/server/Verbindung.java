@@ -42,7 +42,7 @@ public class Verbindung extends Thread {
 
 			if (readFromClient().equals("HELO")) {
 				writeToClient("HELO");
-				username = readFromClient().replace("USER ", "");
+				username = readFromClient().replaceFirst("USER ", "");
 				Set<String> users = server.getUsernames().getNames();
 				if(users.contains(username))
 				{
@@ -57,13 +57,14 @@ public class Verbindung extends Thread {
 				    writeToClient("gewünschter Nutzname belegt. Sie heißen nun "+username);
 				}
 				server.getUsernames().fuegeHinzu(username);
+				server.writeToSockets(username + " hat den Chat betreten.");
 				working = true;
 				}
 			
 
 			while (working) {
 				currentInput = readFromClient();
-				if(currentInput.length() > 500)
+				if(currentInput.length() > 504)
 				{
 				    writeToClient("Eingabe darf max. 500 Zeichen sein.");
 				}
@@ -74,9 +75,12 @@ public class Verbindung extends Thread {
 				else if (currentInput.equals("/users")) {
 
 					writeToClient(server.getUsernames().getNames().toString());
-				} else
+				} else if(currentInput.startsWith("MSG "))
 				{
-					server.writeToSockets(username + ": " + currentInput);
+					server.writeToSockets(username + ": " + currentInput.replaceFirst("MSG ", ""));
+				}
+				else{
+				    writeToClient("falsche Eingabe, du Horst");
 				}
 
 
@@ -98,7 +102,7 @@ public class Verbindung extends Thread {
                 e.printStackTrace();
             }
 			server.getSemaphore().release();
-			server.writeToSockets(username + " hat den chat verlassen.");
+			server.writeToSockets(username + " hat den Chat verlassen.");
 		}
 	}
 

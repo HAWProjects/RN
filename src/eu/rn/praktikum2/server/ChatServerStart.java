@@ -18,6 +18,7 @@ public class ChatServerStart extends Application {
 			scene.getStylesheets().add(getClass().getResource("ChatServerStyle.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("ChatServer");
+			
 			ChatServerController controller = (ChatServerController) loader.getController();
 			controller.getTxtServerport().setText("45619");
 			primaryStage.show();

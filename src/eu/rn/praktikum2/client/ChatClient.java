@@ -91,6 +91,7 @@ public class ChatClient extends Thread implements Observer
             connected = false;
             // myWriter = new MyFileWriter("ChatLogFile.txt", "files/");
 
+            // handshake
             writeToServer("HELO");
             if (readFromServer().equals("HELO"))
             {
@@ -140,7 +141,12 @@ public class ChatClient extends Thread implements Observer
     @Override
     public void reagiereAufTexteingabe()
     {
-        writeToServer(gui.getUserInputField().getText());
+        String input = gui.getUserInputField().getText();
+        if(!input.startsWith("/"))
+        {
+            input = "MSG "+input;
+        }
+        writeToServer(input);
         gui.getUserInputField().setText("");
     }
 
@@ -152,11 +158,6 @@ public class ChatClient extends Thread implements Observer
 
     public class MyThread implements Runnable
     {
-        //FIXME: parameter nicht benutzt
-        public MyThread()
-        {
-            // store parameter for later user
-        }
 
         public void run()
         {

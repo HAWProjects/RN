@@ -1,5 +1,7 @@
 package eu.rn.praktikum2.server;
 
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -40,6 +42,11 @@ public class ChatServerController {
 	private VBox vBoxOutput;
 	
 	@FXML
+	public void exitApplication(ActionEvent event) {
+	   Platform.exit();
+	}
+	
+	@FXML
 	protected void btnStartServerPressed(){
 		String serverport = txtServerport.getText();
 		String clientCount = txtClientCount.getText();
@@ -56,7 +63,7 @@ public class ChatServerController {
 	
 	@FXML
 	protected void btnCloseServerPressed(){
-		
+		System.exit(0);
 	}
 	
 	
