@@ -1,10 +1,13 @@
 package eu.rn.praktikum2.server;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class ChatServerStart extends Application {
 
@@ -21,6 +24,15 @@ public class ChatServerStart extends Application {
 			
 			ChatServerController controller = (ChatServerController) loader.getController();
 			controller.getTxtServerport().setText("45619");
+			
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+	            @Override
+	            public void handle(WindowEvent t) {
+	                Platform.exit();
+	                System.exit(0);
+	            }
+	        });
+			
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
