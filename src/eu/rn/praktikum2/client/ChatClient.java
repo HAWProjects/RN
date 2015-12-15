@@ -103,6 +103,7 @@ public class ChatClient extends Thread implements Observer
             {
                 Runnable vomServerLeser = new MyThread();
                 new Thread(vomServerLeser).start();
+                gui.getVerbinden().setEnabled(false);
             }
         }
         catch (IOException e)
@@ -172,6 +173,7 @@ public class ChatClient extends Thread implements Observer
                     if (messageFromServer.equals("Verbindung beendet"))
                     {
                         socket.close();
+                        gui.getVerbinden().setEnabled(true);
                     }
                     gui.getTextArea().setCaretPosition(gui.getTextArea().getDocument().getLength());
                 }
