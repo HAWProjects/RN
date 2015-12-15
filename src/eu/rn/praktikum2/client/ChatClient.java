@@ -79,6 +79,7 @@ public class ChatClient extends Thread implements Observer
      */
     private void startConnection()
     {
+        if(connected)return;
         hostname = gui.getServerIP().getText();
         serverPort = gui.getServerPort().getText();
         userName = gui.getUsername().getText();
@@ -88,7 +89,6 @@ public class ChatClient extends Thread implements Observer
             socket = new Socket(hostname, Integer.parseInt(serverPort));
             outToServer = new DataOutputStream(socket.getOutputStream());
             inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            connected = false;
             // myWriter = new MyFileWriter("ChatLogFile.txt", "files/");
 
             // handshake
