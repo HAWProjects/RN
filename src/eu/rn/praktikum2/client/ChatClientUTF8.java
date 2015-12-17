@@ -20,7 +20,7 @@ import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
  * @author abt434
  *
  */
-public class ZGChatClient extends Thread implements Observer
+public class ChatClientUTF8 extends Thread implements Observer
 {
 
     private String hostname;
@@ -41,7 +41,7 @@ public class ZGChatClient extends Thread implements Observer
      * @param serverPort
      *            Port auf dem der Server Anfragen annimmt
      */
-    public ZGChatClient(String hostname, String serverPort, String username)
+    public ChatClientUTF8(String hostname, String serverPort, String username)
     {
         this.hostname = hostname;
         this.serverPort = serverPort;
@@ -95,10 +95,8 @@ public class ZGChatClient extends Thread implements Observer
             writeToServer("HELO");
             if (readFromServer().equals("HELO"))
             {
-                writeToServer("USER " +userName);
-
+                writeToServer("USER " + userName);
                 connected = true;
-                
             }
 
             if (connected)
@@ -126,8 +124,7 @@ public class ZGChatClient extends Thread implements Observer
     {
         try
         {
-        	outToServer.write((input + "\r\n").getBytes("UTF-8"));
-//            outToServer.writeBytes(input + "\r\n");
+            outToServer.write((input + "\r\n").getBytes("UTF-8"));
         }
         catch (IOException e)
         {
@@ -145,6 +142,10 @@ public class ZGChatClient extends Thread implements Observer
     public void reagiereAufTexteingabe()
     {
         String input = gui.getUserInputField().getText();
+        if(!input.startsWith("/"))
+        {
+            input = "MSG "+input;
+        }
         writeToServer(input);
         gui.getUserInputField().setText("");
     }
@@ -166,14 +167,6 @@ public class ZGChatClient extends Thread implements Observer
                 try
                 {
                     messageFromServer = readFromServer();
-                    if(messageFromServer.startsWith("NAMES "))
-                    {
-                    	messageFromServer = "Im Chatraum: " + messageFromServer.replaceFirst("NAMES ", "");
-                    }
-                    else if(messageFromServer.startsWith("MESSAGE "))
-                    {
-                    	messageFromServer = messageFromServer.replaceFirst("MESSAGE ", "");
-                    }
                     gui.getTextArea().append(messageFromServer+"\r\n");
                     System.out.println(messageFromServer);
                     if (messageFromServer.equals("Verbindung beendet"))
@@ -213,8 +206,7 @@ public class ZGChatClient extends Thread implements Observer
     
     public static void main(String[] args)
     {
-    	//141.22.83.225
-        new ZGChatClient("LAB26", "50000", "Robert");
+        new ChatClientUTF8("LAB21", "45619", "Robert");
     }
 
 }

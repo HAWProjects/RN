@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.rn.praktikum2.serverUTF8.ChatServerController">
+   <center>
+      <Pane fx:id="serverPane" prefHeight="307.0" prefWidth="238.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="lbServerport" layoutX="72.0" layoutY="39.0" text="Serverport" />
+            <TextField fx:id="txtServerport" layoutX="26.0" layoutY="73.0" />
+            <Label fx:id="lbClientCount" layoutX="71.0" layoutY="124.0" text="ClientCount" />
+            <TextField fx:id="txtClientCount" layoutX="28.0" layoutY="150.0" prefHeight="0.0" prefWidth="149.0" />
+            <Button fx:id="btnStartServer" layoutX="62.0" layoutY="202.0" mnemonicParsing="false" onAction="#btnStartServerPressed" text="Start Server" />
+            <Button fx:id="btnCloseServer" layoutX="69.0" layoutY="249.0" mnemonicParsing="false" onAction="#btnCloseServerPressed" text="Beenden" />
+         </children>
+      </Pane>
+   </center>
+   <left>
+      <ScrollPane fx:id="scPaneServer" prefHeight="300.0" prefWidth="399.0" BorderPane.alignment="CENTER">
+         <content>
+            <VBox fx:id="vBoxOutput" prefHeight="296.0" prefWidth="385.0" />
+         </content>
+      </ScrollPane>
+   </left>
+</BorderPane>
