@@ -20,7 +20,7 @@ import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
  * @author abt434
  *
  */
-public class ChatClient extends Thread implements Observer
+public class BotChatClient extends Thread implements Observer
 {
 
     private String hostname;
@@ -41,7 +41,7 @@ public class ChatClient extends Thread implements Observer
      * @param serverPort
      *            Port auf dem der Server Anfragen annimmt
      */
-    public ChatClient(String hostname, String serverPort, String username)
+    public BotChatClient(String hostname, String serverPort, String username)
     {
         this.hostname = hostname;
         this.serverPort = serverPort;
@@ -169,6 +169,7 @@ public class ChatClient extends Thread implements Observer
                 {
                     messageFromServer = readFromServer();
                     gui.getTextArea().append(messageFromServer+"\r\n");
+                    analyse(messageFromServer);
                     System.out.println(messageFromServer);
                     if (messageFromServer.equals("Verbindung beendet"))
                     {
@@ -183,6 +184,24 @@ public class ChatClient extends Thread implements Observer
                 }
             }
         }
+
+		private void analyse(String messageFromServer) {
+			String text = messageFromServer.toLowerCase();
+			String output = "";
+			if(text.contains("bla")){
+				output = "Immer nur quatschen.";
+			} else if(text.contains("schwanz")){
+				output = "ich mag schwänze";
+			}else if(text.contains("ficken")){
+				output = "ja hier!!!";
+			}
+			
+			
+			if(!output.isEmpty())
+			{
+			writeToServer("MSG "+ output);
+			}
+		}
 
     }
 
@@ -207,7 +226,7 @@ public class ChatClient extends Thread implements Observer
     
     public static void main(String[] args)
     {
-        new ChatClient("LAB21", "45619", "Robert");
+        new BotChatClient("LAB21", "45619", "HHGirl19");
     }
 
 }

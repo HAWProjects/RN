@@ -20,7 +20,7 @@ import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
  * @author abt434
  *
  */
-public class ChatClient extends Thread implements Observer
+public class RGChatClient extends Thread implements Observer
 {
 
     private String hostname;
@@ -41,7 +41,7 @@ public class ChatClient extends Thread implements Observer
      * @param serverPort
      *            Port auf dem der Server Anfragen annimmt
      */
-    public ChatClient(String hostname, String serverPort, String username)
+    public RGChatClient(String hostname, String serverPort, String username)
     {
         this.hostname = hostname;
         this.serverPort = serverPort;
@@ -92,11 +92,14 @@ public class ChatClient extends Thread implements Observer
             // myWriter = new MyFileWriter("ChatLogFile.txt", "files/");
 
             // handshake
-            writeToServer("HELO");
-            if (readFromServer().equals("HELO"))
+//            writeToServer("SUBMITNAME");
+            if (readFromServer().equals("SUBMITNAME"))
             {
-                writeToServer("USER " + userName);
+                writeToServer(userName);
+                if(readFromServer().equals("NAMEACCEPTED"))
+                {
                 connected = true;
+                }
             }
 
             if (connected)
@@ -124,8 +127,8 @@ public class ChatClient extends Thread implements Observer
     {
         try
         {
-            input = Base64.encode(input.getBytes());
-            outToServer.writeBytes(input + "\r\n");
+        	outToServer.write((input + "\r\n").getBytes("UTF-8"));
+//            outToServer.writeBytes(input + "\r\n");
         }
         catch (IOException e)
         {
@@ -143,10 +146,6 @@ public class ChatClient extends Thread implements Observer
     public void reagiereAufTexteingabe()
     {
         String input = gui.getUserInputField().getText();
-        if(!input.startsWith("/"))
-        {
-            input = "MSG "+input;
-        }
         writeToServer(input);
         gui.getUserInputField().setText("");
     }
@@ -168,6 +167,14 @@ public class ChatClient extends Thread implements Observer
                 try
                 {
                     messageFromServer = readFromServer();
+                    if(messageFromServer.startsWith("NAMES "))
+                    {
+                    	messageFromServer = "Im Chatraum: " + messageFromServer.replaceFirst("NAMES ", "");
+                    }
+                    else if(messageFromServer.startsWith("MESSAGE "))
+                    {
+                    	messageFromServer = messageFromServer.replaceFirst("MESSAGE ", "");
+                    }
                     gui.getTextArea().append(messageFromServer+"\r\n");
                     System.out.println(messageFromServer);
                     if (messageFromServer.equals("Verbindung beendet"))
@@ -201,13 +208,14 @@ public class ChatClient extends Thread implements Observer
         }
         else
         {
-        return new String(Base64.decode(inFromServer.readLine()));
+        return new String(inFromServer.readLine().getBytes(),"UTF-8");
         }
     }
     
     public static void main(String[] args)
     {
-        new ChatClient("LAB21", "45619", "Robert");
+    	//141.22.83.225
+        new RGChatClient("LAB26", "50000", "Robert");
     }
 
 }
