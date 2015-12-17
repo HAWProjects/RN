@@ -206,7 +206,7 @@ public class ChatClientUTF8 extends Thread implements Observer
     
     public static void main(String[] args)
     {
-        new ChatClientUTF8("LAB21", "45619", "Robert");
+        new ChatClientUTF8("192.168.178.20", "45619", "Robert");
     }
 
 }

@@ -36,7 +36,7 @@ public class Verbindung extends Thread {
 		String currentInput;
 		System.out.println("TCP Worker Thread " + threadNumber + " is running until QUIT is received!");
 		try {
-			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			input = new BufferedReader(new InputStreamReader(socket.getInputStream()),512);
 			output = new DataOutputStream(socket.getOutputStream());
 			writer = new MyFileWriter("ChatLogFile.txt", "files/");
 
